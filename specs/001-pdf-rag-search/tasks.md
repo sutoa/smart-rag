@@ -24,11 +24,11 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure per plan.md (src/models/, src/services/, src/cli/, src/lib/, tests/, data/)
-- [ ] T002 Initialize Python 3.11+ project with pyproject.toml and requirements.txt
-- [ ] T003 [P] Add dependencies: pdfplumber, chromadb, openai, sentence-transformers, typer, rich, pydantic
-- [ ] T004 [P] Configure .gitignore for Python, data/, .env files
-- [ ] T005 [P] Create .env.example with OPENAI_API_KEY placeholder
+- [x] T001 Create project directory structure per plan.md (src/models/, src/services/, src/cli/, src/lib/, tests/, data/)
+- [x] T002 Initialize Python 3.11+ project with pyproject.toml and requirements.txt
+- [x] T003 [P] Add dependencies: pdfplumber, chromadb, openai, sentence-transformers, typer, rich, pydantic
+- [x] T004 [P] Configure .gitignore for Python, data/, .env files
+- [x] T005 [P] Create .env.example with OPENAI_API_KEY placeholder
 
 ---
 
@@ -38,14 +38,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create configuration management in src/models/config.py (load from env vars and optional YAML config file)
-- [ ] T007 [P] Create Document model with all fields in src/models/document.py (id, name, file_path, page_count, status, etc.)
-- [ ] T008 [P] Create Chunk model with all fields in src/models/chunk.py (id, document_id, content, page_number, embedding, metadata)
-- [ ] T009 [P] Create Response and Citation models in src/models/response.py (answer, citations, metadata)
-- [ ] T010 Implement OpenAI client wrapper in src/lib/openai_client.py (embeddings and chat completions)
-- [ ] T011 Implement ChromaDB abstraction in src/lib/vector_store.py (PersistentClient, add, query, delete)
-- [ ] T012 Implement SQLite metadata store in src/lib/metadata_store.py (CRUD for Document records)
-- [ ] T013 Create CLI app skeleton with Typer in src/cli/main.py (app entry point, --help)
+- [x] T006 Create configuration management in src/models/config.py (load from env vars and optional YAML config file)
+- [x] T007 [P] Create Document model with all fields in src/models/document.py (id, name, file_path, page_count, status, etc.)
+- [x] T008 [P] Create Chunk model with all fields in src/models/chunk.py (id, document_id, content, page_number, embedding, metadata)
+- [x] T009 [P] Create Response and Citation models in src/models/response.py (answer, citations, metadata)
+- [x] T010 Implement OpenAI client wrapper in src/lib/openai_client.py (embeddings and chat completions)
+- [x] T011 Implement ChromaDB abstraction in src/lib/vector_store.py (PersistentClient, add, query, delete)
+- [x] T012 Implement SQLite metadata store in src/lib/metadata_store.py (CRUD for Document records)
+- [x] T013 Create CLI app skeleton with Typer in src/cli/main.py (app entry point, --help)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -59,19 +59,19 @@
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Implement PDF text extraction in src/services/pdf_extractor.py (extract text per page including tables)
-- [ ] T015 [US1] Add page iteration with flush_cache() for memory efficiency in src/services/pdf_extractor.py
-- [ ] T016 [US1] Implement table extraction logic in src/services/pdf_extractor.py (pdfplumber extract_tables)
-- [ ] T017 [US1] Implement LLM-assisted chunking in src/services/chunker.py (GPT-4o determines semantic boundaries)
-- [ ] T018 [US1] Add chunk metadata generation in src/services/chunker.py (page_number, has_table, section_title)
-- [ ] T019 [US1] Implement embedding generation for chunks in src/services/chunker.py (text-embedding-3-large)
-- [ ] T020 [US1] Implement indexer service in src/services/indexer.py (orchestrate extraction → chunking → storage)
-- [ ] T021 [US1] Add document status management in src/services/indexer.py (pending → processing → completed/failed)
-- [ ] T022 [US1] Add progress feedback with rich progress bar in src/services/indexer.py
-- [ ] T023 [US1] Implement error handling for corrupt/protected PDFs in src/services/indexer.py (skip with logging)
-- [ ] T024 [US1] Implement `index` CLI command in src/cli/main.py (folder_path argument, --recursive, --force, --verbose)
-- [ ] T025 [US1] Implement `status` CLI command in src/cli/main.py (show indexed docs, chunks, storage size)
-- [ ] T026 [US1] Implement `clear` CLI command in src/cli/main.py (--yes flag, confirmation prompt)
+- [x] T014 [US1] Implement PDF text extraction in src/services/pdf_extractor.py (extract text per page including tables)
+- [x] T015 [US1] Add page iteration with flush_cache() for memory efficiency in src/services/pdf_extractor.py
+- [x] T016 [US1] Implement table extraction logic in src/services/pdf_extractor.py (pdfplumber extract_tables)
+- [x] T017 [US1] Implement LLM-assisted chunking in src/services/chunker.py (GPT-4o determines semantic boundaries)
+- [x] T018 [US1] Add chunk metadata generation in src/services/chunker.py (page_number, has_table, section_title)
+- [x] T019 [US1] Implement embedding generation for chunks in src/services/chunker.py (text-embedding-3-large)
+- [x] T020 [US1] Implement indexer service in src/services/indexer.py (orchestrate extraction → chunking → storage)
+- [x] T021 [US1] Add document status management in src/services/indexer.py (pending → processing → completed/failed)
+- [x] T022 [US1] Add progress feedback with rich progress bar in src/services/indexer.py
+- [x] T023 [US1] Implement error handling for corrupt/protected PDFs in src/services/indexer.py (skip with logging)
+- [x] T024 [US1] Implement `index` CLI command in src/cli/main.py (folder_path argument, --recursive, --force, --verbose)
+- [x] T025 [US1] Implement `status` CLI command in src/cli/main.py (show indexed docs, chunks, storage size)
+- [x] T026 [US1] Implement `clear` CLI command in src/cli/main.py (--yes flag, confirmation prompt)
 
 **Checkpoint**: User Story 1 complete - users can now index PDFs and check status
 
@@ -87,15 +87,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T027 [US2] Implement similarity search in src/services/retriever.py (ChromaDB query, top 30+ chunks)
-- [ ] T028 [US2] Implement cross-encoder reranking in src/services/retriever.py (sentence-transformers ms-marco model)
-- [ ] T029 [US2] Add relevance score calculation in src/services/retriever.py (normalize reranker scores)
-- [ ] T030 [US2] Implement grounded response generation in src/services/generator.py (GPT-4o with retrieved context)
-- [ ] T031 [US2] Add citation extraction in src/services/generator.py (document_name, page_number, verbatim_quote)
-- [ ] T032 [US2] Implement "not found" detection in src/services/generator.py (return clear message when no relevant info)
-- [ ] T033 [US2] Implement `query` CLI command in src/cli/main.py (question argument, --json, --max-sources)
-- [ ] T034 [US2] Add human-readable output formatting in src/cli/main.py (answer, sources with quotes, metadata)
-- [ ] T035 [US2] Add JSON output formatting in src/cli/main.py (structured response per CLI contract)
+- [x] T027 [US2] Implement similarity search in src/services/retriever.py (ChromaDB query, top 30+ chunks)
+- [x] T028 [US2] Implement cross-encoder reranking in src/services/retriever.py (sentence-transformers ms-marco model)
+- [x] T029 [US2] Add relevance score calculation in src/services/retriever.py (normalize reranker scores)
+- [x] T030 [US2] Implement grounded response generation in src/services/generator.py (GPT-4o with retrieved context)
+- [x] T031 [US2] Add citation extraction in src/services/generator.py (document_name, page_number, verbatim_quote)
+- [x] T032 [US2] Implement "not found" detection in src/services/generator.py (return clear message when no relevant info)
+- [x] T033 [US2] Implement `query` CLI command in src/cli/main.py (question argument, --json, --max-sources)
+- [x] T034 [US2] Add human-readable output formatting in src/cli/main.py (answer, sources with quotes, metadata)
+- [x] T035 [US2] Add JSON output formatting in src/cli/main.py (structured response per CLI contract)
 
 **Checkpoint**: User Story 2 complete - users can query for definitions with citations
 
@@ -111,9 +111,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T036 [US3] Enhance retriever to gather from multiple documents in src/services/retriever.py (deduplicate by document)
-- [ ] T037 [US3] Enhance generator prompt for list aggregation in src/services/generator.py (synthesize across sources)
-- [ ] T038 [US3] Add multi-source citation grouping in src/services/generator.py (each item cites its source)
+- [x] T036 [US3] Enhance retriever to gather from multiple documents in src/services/retriever.py (deduplicate by document)
+- [x] T037 [US3] Enhance generator prompt for list aggregation in src/services/generator.py (synthesize across sources)
+- [x] T038 [US3] Add multi-source citation grouping in src/services/generator.py (each item cites its source)
 
 **Checkpoint**: User Story 3 complete - entity queries return complete aggregated lists
 
@@ -129,10 +129,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T039 [US4] Add timing instrumentation in src/services/retriever.py and src/services/generator.py
-- [ ] T040 [US4] Optimize embedding batch processing in src/services/chunker.py (batch API calls)
-- [ ] T041 [US4] Add caching for reranker model loading in src/services/retriever.py (load once, reuse)
-- [ ] T042 [US4] Display response time in CLI output in src/cli/main.py
+- [x] T039 [US4] Add timing instrumentation in src/services/retriever.py and src/services/generator.py
+- [x] T040 [US4] Optimize embedding batch processing in src/services/chunker.py (batch API calls)
+- [x] T041 [US4] Add caching for reranker model loading in src/services/retriever.py (load once, reuse)
+- [x] T042 [US4] Display response time in CLI output in src/cli/main.py
 
 **Checkpoint**: User Story 4 complete - queries return within target time
 
@@ -148,10 +148,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T043 [US5] Enhance generator prompt to enforce grounding in src/services/generator.py (only use retrieved content)
-- [ ] T044 [US5] Add verbatim quote extraction validation in src/services/generator.py (verify quotes exist in chunks)
-- [ ] T045 [US5] Implement confidence scoring in src/services/generator.py (based on reranker scores)
-- [ ] T046 [US5] Add --no-quotes CLI option in src/cli/main.py (omit verbatim quotes for compact output)
+- [x] T043 [US5] Enhance generator prompt to enforce grounding in src/services/generator.py (only use retrieved content)
+- [x] T044 [US5] Add verbatim quote extraction validation in src/services/generator.py (verify quotes exist in chunks)
+- [x] T045 [US5] Implement confidence scoring in src/services/generator.py (based on reranker scores)
+- [x] T046 [US5] Add --no-quotes CLI option in src/cli/main.py (omit verbatim quotes for compact output)
 
 **Checkpoint**: User Story 5 complete - all responses are fully grounded and verifiable
 
