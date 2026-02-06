@@ -161,12 +161,12 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T047 [P] Add comprehensive error messages per CLI contract in src/cli/main.py
-- [ ] T048 [P] Add logging configuration in src/models/config.py (configurable log level)
-- [ ] T049 [P] Create sample PDF fixtures in tests/fixtures/sample_pdfs/ for manual testing
-- [ ] T050 Validate all CLI commands against contracts/cli-interface.md
-- [ ] T051 Validate quickstart.md workflow end-to-end
-- [ ] T052 [P] Add README.md with installation and usage instructions
+- [x] T047 [P] Add comprehensive error messages per CLI contract in src/cli/main.py
+- [x] T048 [P] Add logging configuration in src/models/config.py (configurable log level)
+- [x] T049 [P] Create sample PDF fixtures in tests/fixtures/sample_pdfs/ for manual testing
+- [x] T050 Validate all CLI commands against contracts/cli-interface.md
+- [x] T051 Validate quickstart.md workflow end-to-end
+- [x] T052 [P] Add README.md with installation and usage instructions
 
 ---
 

@@ -79,20 +79,26 @@ class Chunk(BaseModel):
         Returns:
             Dictionary with id, document, embedding, and metadata.
         """
+        # Build metadata dict, excluding None values (ChromaDB 1.4+ doesn't accept None)
+        metadata: dict[str, Any] = {
+            "document_id": self.document_id,
+            "document_name": self.document_name,
+            "page_number": self.page_number,
+            "chunk_index": self.chunk_index,
+            "has_table": self.metadata.has_table,
+            "extraction_method": self.metadata.extraction_method,
+        }
+        # Only add optional fields if they have values
+        if self.page_end is not None:
+            metadata["page_end"] = self.page_end
+        if self.metadata.section_title is not None:
+            metadata["section_title"] = self.metadata.section_title
+
         return {
             "id": self.id,
             "document": self.content,
             "embedding": self.embedding,
-            "metadata": {
-                "document_id": self.document_id,
-                "document_name": self.document_name,
-                "page_number": self.page_number,
-                "page_end": self.page_end,
-                "chunk_index": self.chunk_index,
-                "has_table": self.metadata.has_table,
-                "section_title": self.metadata.section_title,
-                "extraction_method": self.metadata.extraction_method,
-            },
+            "metadata": metadata,
         }
 
     @classmethod

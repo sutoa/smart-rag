@@ -296,18 +296,18 @@ class Retriever:
         chunks.sort(key=lambda c: c.relevance_score, reverse=True)
         return chunks[:top_k]
 
-    def _normalize_scores(self, scores: list[float]) -> list[float]:
+    def _normalize_scores(self, scores) -> list[float]:
         """Normalize reranker scores to 0-1 range.
 
         Cross-encoder scores can vary widely, so we normalize them.
 
         Args:
-            scores: Raw reranker scores.
+            scores: Raw reranker scores (numpy array or list).
 
         Returns:
             Normalized scores (0-1).
         """
-        if not scores:
+        if len(scores) == 0:
             return []
 
         # Use sigmoid for normalization (works well for cross-encoder scores)
@@ -315,8 +315,10 @@ class Retriever:
 
         normalized = []
         for score in scores:
+            # Handle numpy scalar if needed
+            score_val = float(score)
             # Sigmoid transformation
-            normalized_score = 1.0 / (1.0 + math.exp(-score))
+            normalized_score = 1.0 / (1.0 + math.exp(-score_val))
             normalized.append(round(normalized_score, 4))
 
         return normalized

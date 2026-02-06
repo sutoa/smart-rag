@@ -183,7 +183,7 @@ def index(
             show_progress=True,
         )
     except Exception as e:
-        console.print(f"[red]Error:[/red] {e}")
+        handle_error(e)
         raise typer.Exit(code=1)
 
     # Print results
@@ -315,7 +315,7 @@ def query(
                 console.print(f"  [dim]Generation: {generation_time}ms[/dim]")
 
     except Exception as e:
-        console.print(f"[red]Error:[/red] {e}")
+        handle_error(e)
         raise typer.Exit(code=1)
 
 
