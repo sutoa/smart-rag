@@ -24,8 +24,8 @@ class OpenAISettings(BaseSettings):
 class RetrievalSettings(BaseSettings):
     """Retrieval configuration."""
 
-    top_k: int = Field(default=30, description="Number of chunks to retrieve")
-    rerank_top_k: int = Field(default=5, description="Number of chunks after reranking")
+    top_k: int = Field(default=50, description="Number of chunks to retrieve")
+    rerank_top_k: int = Field(default=10, description="Number of chunks after reranking")
     reranker_model: str = Field(
         default="cross-encoder/ms-marco-MiniLM-L-12-v2",
         description="Cross-encoder model for reranking",
@@ -114,8 +114,8 @@ class Settings(BaseSettings):
         )
 
         retrieval_settings = RetrievalSettings(
-            top_k=retrieval_config.get("top_k", 30),
-            rerank_top_k=retrieval_config.get("rerank_top_k", 5),
+            top_k=retrieval_config.get("top_k", 50),
+            rerank_top_k=retrieval_config.get("rerank_top_k", 10),
             reranker_model=retrieval_config.get(
                 "reranker_model", "cross-encoder/ms-marco-MiniLM-L-12-v2"
             ),

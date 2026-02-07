@@ -328,8 +328,8 @@ class Retriever:
         query: str,
         top_k: Optional[int] = None,
         rerank_top_k: Optional[int] = None,
-        min_docs: int = 2,
-        max_chunks_per_doc: int = 3,
+        min_docs: int = 1,
+        max_chunks_per_doc: int = 10,
     ) -> RetrievalResult:
         """Retrieve chunks ensuring coverage from multiple documents.
 

@@ -250,6 +250,65 @@ class Chunker:
     # Maximum chunks per embedding batch (OpenAI limit is ~8K tokens input)
     EMBEDDING_BATCH_SIZE = 50
 
+    # Maximum characters per chunk for embedding (8192 tokens * ~3.5 chars/token, with safety margin)
+    MAX_EMBEDDING_CHARS = 24000
+
+    def _split_oversized_chunk(self, chunk: Chunk) -> list[Chunk]:
+        """Split a chunk that exceeds embedding token limit.
+
+        Args:
+            chunk: Chunk that may be too large.
+
+        Returns:
+            List of chunks, possibly split if original was too large.
+        """
+        if len(chunk.content) <= self.MAX_EMBEDDING_CHARS:
+            return [chunk]
+
+        # Split into smaller pieces
+        content = chunk.content
+        sub_chunks = []
+        chunk_idx = 0
+
+        while content:
+            # Take up to MAX_EMBEDDING_CHARS, but try to split at paragraph boundary
+            if len(content) <= self.MAX_EMBEDDING_CHARS:
+                piece = content
+                content = ""
+            else:
+                # Find a good split point (paragraph or sentence)
+                split_point = self.MAX_EMBEDDING_CHARS
+                # Look for paragraph break
+                para_break = content.rfind("\n\n", 0, split_point)
+                if para_break > split_point // 2:
+                    split_point = para_break
+                else:
+                    # Look for sentence break
+                    for sep in [". ", ".\n", "? ", "!\n"]:
+                        sent_break = content.rfind(sep, 0, self.MAX_EMBEDDING_CHARS)
+                        if sent_break > split_point // 2:
+                            split_point = sent_break + len(sep)
+                            break
+
+                piece = content[:split_point].strip()
+                content = content[split_point:].strip()
+
+            if piece and len(piece) >= self.MIN_CHUNK_SIZE:
+                sub_chunks.append(
+                    Chunk(
+                        document_id=chunk.document_id,
+                        document_name=chunk.document_name,
+                        content=piece,
+                        page_number=chunk.page_number,
+                        chunk_index=chunk.chunk_index + chunk_idx,
+                        metadata=chunk.metadata,
+                    )
+                )
+                chunk_idx += 1
+
+        logger.info(f"Split oversized chunk into {len(sub_chunks)} smaller chunks")
+        return sub_chunks if sub_chunks else [chunk]
+
     def _add_embeddings(self, chunks: list[Chunk]) -> list[Chunk]:
         """Add embeddings to chunks in optimized batches.
 
@@ -264,13 +323,18 @@ class Chunker:
         if not chunks:
             return chunks
 
+        # Split any oversized chunks before embedding
+        processed_chunks: list[Chunk] = []
+        for chunk in chunks:
+            processed_chunks.extend(self._split_oversized_chunk(chunk))
+
         client = self._get_client()
 
         # Process in batches for optimal API usage
         all_embeddings: list[list[float]] = []
 
-        for i in range(0, len(chunks), self.EMBEDDING_BATCH_SIZE):
-            batch = chunks[i : i + self.EMBEDDING_BATCH_SIZE]
+        for i in range(0, len(processed_chunks), self.EMBEDDING_BATCH_SIZE):
+            batch = processed_chunks[i : i + self.EMBEDDING_BATCH_SIZE]
             texts = [chunk.content for chunk in batch]
 
             try:
@@ -278,10 +342,10 @@ class Chunker:
                 batch_embeddings = client.get_embeddings(texts)
                 all_embeddings.extend(batch_embeddings)
 
-                if len(chunks) > self.EMBEDDING_BATCH_SIZE:
+                if len(processed_chunks) > self.EMBEDDING_BATCH_SIZE:
                     logger.debug(
                         f"Embedded batch {i // self.EMBEDDING_BATCH_SIZE + 1}/"
-                        f"{(len(chunks) - 1) // self.EMBEDDING_BATCH_SIZE + 1}"
+                        f"{(len(processed_chunks) - 1) // self.EMBEDDING_BATCH_SIZE + 1}"
                     )
 
             except Exception as e:
@@ -289,11 +353,11 @@ class Chunker:
                 raise
 
         # Assign embeddings to chunks
-        for chunk, embedding in zip(chunks, all_embeddings):
+        for chunk, embedding in zip(processed_chunks, all_embeddings):
             chunk.embedding = embedding
             chunk.estimate_tokens()
 
-        return chunks
+        return processed_chunks
 
     def chunk_single_text(
         self,

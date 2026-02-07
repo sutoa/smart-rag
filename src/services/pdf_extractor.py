@@ -214,8 +214,8 @@ class PDFExtractor:
         Returns:
             ExtractedPage with extracted content.
         """
-        # Extract text
-        text = page.extract_text() or ""
+        # Extract text with layout preservation for better table handling
+        text = page.extract_text(layout=True) or ""
 
         # Extract tables
         tables = []

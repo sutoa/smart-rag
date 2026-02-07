@@ -86,15 +86,10 @@ class Generator:
                 processing_time_ms=total_time_ms,
             )
 
-        # Check if chunks have sufficient relevance
-        if self._chunks_irrelevant(chunks):
-            generation_time_ms = int((time.time() - start_time) * 1000)
-            total_time_ms = retrieval_result.total_time_ms + generation_time_ms
-            return Response.not_found_response(
-                query_text=query,
-                chunks_retrieved=retrieval_result.total_retrieved,
-                processing_time_ms=total_time_ms,
-            )
+        # Note: Relevance filtering disabled - let LLM decide relevance
+        # The reranker already scores chunks; additional filtering was too aggressive
+        # if self._chunks_irrelevant(chunks):
+        #     ...pass chunks to LLM regardless
 
         # Detect if this is an entity/list query
         is_entity_query = self._is_entity_query(query)
@@ -304,7 +299,7 @@ Compile a COMPLETE answer by aggregating information from ALL sources. For list 
     def _chunks_irrelevant(
         self,
         chunks: list[RetrievedChunk],
-        threshold: float = 0.3,
+        threshold: float = 0.1,
     ) -> bool:
         """Check if retrieved chunks are too irrelevant.
 
